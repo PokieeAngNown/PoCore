@@ -1,0 +1,5 @@
+name: PoCore
+version: '${project.version}'
+main: cn.postudio.pocore.PoCore
+api-version: '1.20'
+softdepend: [PlaceholderAPI]
