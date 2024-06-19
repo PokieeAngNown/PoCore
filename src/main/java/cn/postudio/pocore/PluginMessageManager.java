@@ -1,14 +1,11 @@
 package cn.postudio.pocore;
 
-import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.Objects;
 
 public class PluginMessageManager {
 
@@ -17,9 +14,17 @@ public class PluginMessageManager {
         return YamlConfiguration.loadConfiguration(file);
     }
 
-    public static void sendMessageToPlayer(Plugin plugin, String key, @NotNull Player player){
-        String message = Objects.requireNonNull(getLang(plugin).getString(key));
-        message = PlaceholderAPI.setPlaceholders(player, message);
-        player.sendMessage(message);
+    public static @NotNull String handleMessageType(Plugin plugin, String key){
+        FileConfiguration cfg = getLang(plugin);
+        String unhandledMessage = cfg.getString(key);
+        String handledMessage;
+        assert unhandledMessage != null;
+        if (unhandledMessage.startsWith("[") && unhandledMessage.endsWith("]")){
+               handledMessage = unhandledMessage.substring(1, unhandledMessage.length() -1);
+               handledMessage = handledMessage.replaceAll(",", "\n");
+               return handledMessage;
+        }else{
+            return unhandledMessage;
+        }
     }
 }
